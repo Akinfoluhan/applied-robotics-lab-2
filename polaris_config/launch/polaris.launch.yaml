@@ -1,1 +1,10 @@
 ## Main launch file for the polaris for lab 2
+
+launch:
+	- node:
+	    pkg: 'ndi_tracker'
+	    exec: 'ndi_tracker'
+	    name: 'ndi_tracker'
+	    output: 'screen'
+	    
+	    args: '-j /src/lab_2/lab_2/polaris_config/polaris_config.json -P 0.05'
