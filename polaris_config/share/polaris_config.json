@@ -3,4 +3,28 @@
     // Configuration file for the Polaris in Lab 2
     // Applied Robotics
     
+    // first serial port to check (could also specify the exact port we connect to)
+    "serial-port": "/dev/ttyUSB0",
+
+     // path to look for files
+    "definition-path": ["~/workspace/examples_ws/src/lecture10_examples/polaris_example/share/roms"],
+
+    // name of base frame
+    "name": "polaris",
+
+    // tools to be tracked
+    "tools": [
+        {
+            "name": "base_tracker",
+            "definition": "8700338.rom",
+            "unique-id": "01-34801401-8700338"
+        }
+        ,
+        {
+            "name": "ee_tracker",
+            "definition": "8700339.rom",
+            "unique-id": "01-34801403-8700339"
+        }
+    ]
+
 }
