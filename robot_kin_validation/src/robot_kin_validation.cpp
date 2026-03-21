@@ -3,6 +3,7 @@
 RobotKinValidation::RobotKinValidation(rclcpp::NodeOptions options) : Node("robot_kin_validation", options)
 {
 
+
 }
 
 void RobotKinValidation::initMoveGroup()
@@ -41,18 +42,55 @@ bool RobotKinValidation::moveJoints()
 
 void RobotKinValidation::computeErrorMetrics()
 {
+    tf_buffer_ = std::make_unique<tf2_ros::Buffer>(this->get_clock());
+    tf_listener_ = std::make_shared<tf2_ros::TransformListener>(*tf_buffer_);
+    
+    try
+    {
+        geometry_msgs::msg::TransformStamped transform = tf_buffer_->lookupTransform("ee_frame_", "tracked_frame_", tf2::TimePointZero);
 
+        Eigen::Vector3d translation(
+            transform.transform.translation.x,
+            transform.transform.translation.y,
+            transform.transform.translation.z
+        );
+
+        Eigen::Quaterniond rotation(
+            transform.transform.rotation.w,
+            transform.transform.rotation.x,
+            transform.transform.rotation.y,
+            transform.transform.rotation.z
+        )
+
+        translational_errors_[circle_idx_] = computeTranslationMetric(translation);
+        rotational_errors_[circle_idx_] = computeRotationMetric(rotation);
+
+        RCLCPP::INFO(
+            this->get_logger(),
+            "Point %zu | Translation error: %.6f m | Rotation error: %.6f deg",
+            circle_idx_,
+            translational_errors_[circle_idx_];
+            rotational_errors_[circle_idx_];
+        );
+    }
+    catch (const tf2::TransformException & ex)
+    {
+        RCLCPP_ERROR(this->get_logger(), "lookup failed!");
+    }
 }
 
 double RobotKinValidation::computeRotationMetric(const Eigen::Quaterniond & rot)
 {
+    Eigen::Quaterniond rot_norm = rot.normalized();
+    Eigen::AngleAxisd ax_ang(rot_norm);
+    return ax_ang.angle() * 180.0 / M_PI;
 
 }
 
 
 double RobotKinValidation::computeTranslationMetric(Eigen::Vector3d & pos_vec)
 {
-
+    return pos_vec.norm();
 }
 
 void RobotKinValidation::robotDescriptionCallback(const std_msgs::msg::String& msg)
