@@ -7,6 +7,11 @@ RobotKinValidation::RobotKinValidation(rclcpp::NodeOptions options) : Node("robo
 
 void RobotKinValidation::initMoveGroup()
 {
+    // initialize movegroup
+    move_group_ = std::make_shared<moveit::planning_interface::MoveGroupInterface>(shared_from_this(), "meca500_arm");
+
+    // set movegroup to target joint angle
+    move_group_->setJointValueTarget(target_joint_angs);
 
 }
 
@@ -22,6 +27,15 @@ void RobotKinValidation::solveIKAndMoveRobot(const Eigen::Vector3d & position)
 
 bool RobotKinValidation::moveJoints()
 {
+    // if move plan succeeded, move robot
+    if (move_group_->plan(plan_) == moveit::core::MoveItErrorCode::SUCCESS)
+    {
+        move_group_->execute(plan_);
+    }
+    else // print error otherwise
+    {
+        RCLCPP_INFO(this->get_logger(), "Plan failed");
+    }
 
 }
 
