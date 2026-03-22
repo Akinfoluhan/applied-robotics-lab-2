@@ -154,14 +154,39 @@ double RobotKinValidation::computeTranslationMetric(Eigen::Vector3d & pos_vec)
     return pos_vec.norm();
 }
 
-void RobotKinValidation::robotDescriptionCallback(const std_msgs::msg::String& msg)
+void RobotKinValidation::robotDescriptionCallback(const std_msgs::msg::String & msg)
 {
-
+    if (!kdl_parser::treeFromString(msg.data, tree_))
+    {
+        RCLCPP_ERROR(this->get_logger(), "Couldn't construct KDL tree");
+        return;
+    }
+ 
+    // Get kinematic chain — change link names to match your robot's URDF
+    if (!tree_.getChain("LINK0 NAME", "EE LINK ", chain_)) //replace with meca500 link names
+    {
+        RCLCPP_ERROR(this->get_logger(), "Couldn't get kinematic chain");
+        return;
+    }
+ 
+    // Size the joint array to match the chain
+    joint_angles_.resize(chain_.getNrOfJoints());
+ 
+    // Create IK solver
+    ik_solver_ = std::make_unique<KDL::ChainIkSolverPos_LMA>(chain_);
+    solver_ready_ = true;
+ 
+    RCLCPP_INFO(this->get_logger(), "KDL solver ready (%u joints).", chain_.getNrOfJoints());
+}
 }
 
 double RobotKinValidation::computeAverageOfArray(const std::array<double, 360> & array)
 {
-
+    double sum = 0.0;
+    for (i = 0; i < array.size(); i++){
+        sum += array[i];
+    }
+    return sum / 360.0;
 }
 
 int main(int argc, char** argv)
