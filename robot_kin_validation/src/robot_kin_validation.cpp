@@ -66,7 +66,7 @@ bool RobotKinValidation::mainCircleLoop()
         return true;
 
     }
-    double theta = static_cast<double>(circle_idx) * M_PI / 180.0;
+    double theta = static_cast<double>(circle_idx_) * M_PI / 180.0;
 
     // the circle remains on the yz plane
     Eigen::Vector3d target_position;
@@ -166,17 +166,17 @@ void RobotKinValidation::computeErrorMetrics()
             transform.transform.rotation.x,
             transform.transform.rotation.y,
             transform.transform.rotation.z
-        )
+        );
 
         translational_errors_[circle_idx_] = computeTranslationMetric(translation);
         rotational_errors_[circle_idx_] = computeRotationMetric(rotation);
 
-        RCLCPP::INFO(
+        RCLCPP_INFO(
             this->get_logger(),
             "Point %zu | Translation error: %.6f m | Rotation error: %.6f deg",
             circle_idx_,
-            translational_errors_[circle_idx_];
-            rotational_errors_[circle_idx_];
+            translational_errors_[circle_idx_],
+            rotational_errors_[circle_idx_]
         );
     }
     catch (const tf2::TransformException & ex)
@@ -222,7 +222,6 @@ void RobotKinValidation::robotDescriptionCallback(const std_msgs::msg::String & 
     solver_ready_ = true;
  
     RCLCPP_INFO(this->get_logger(), "KDL solver ready (%u joints).", chain_.getNrOfJoints());
-}
 }
 
 double RobotKinValidation::computeAverageOfArray(const std::array<double, 360> & array)

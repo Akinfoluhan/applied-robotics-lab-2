@@ -83,7 +83,7 @@ private:
     size_t circle_idx_;
 
     // std::vector<double> for target joint angles
-    std::vector<double> target_joint_angs = {0.0, 0.0,  0.0, 0.0, 0.0, 0.0};
+    std::vector<double> target_joint_angs = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
 
     // std::arrays for error metrics  
     std::array<double, 360> translational_errors_;
