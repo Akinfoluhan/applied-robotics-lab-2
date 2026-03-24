@@ -82,7 +82,52 @@ bool RobotKinValidation::mainCircleLoop()
 
 void RobotKinValidation::solveIKAndMoveRobot(const Eigen::Vector3d & position)
 {
+    if (ik_solver_ != nullptr) 
+    {
+        // setup an initial guess of the joint angles (check hint for RVIZ)
+        KDL::JntArray q_init(chain_.getNrOfJoints());
+        q_init(0) = M_PI/2.0; q_init(1) = 0.0; q_init(2) = 0.2; 
+        q_init(3) = -M_PI/2.0; q_init(4) = 0.2; q_init(5) = 0.0; 
 
+        // Convert Eigen::Vector3d to KDL::Vector
+        KDL::Vector kdl_position(position(0), position(1), position(2));
+
+        // Convert Eigen::Quaterniond to KDL::Rotation
+        KDL::Rotation kdl_rotation = KDL::Rotation::Quaternion(
+            0.0, 0.0, 0.0, 1.0  // meca500 EE orientation
+        );
+
+        // Construct the KDL::Frame
+        KDL::Frame desired_ee_frame(kdl_rotation, kdl_position);
+
+        // solve the inverse kinematics
+        int error = ik_solver_->CartToJnt(q_init, desired_ee_frame, q_target_);
+
+        if (error == KDL::ChainIkSolverPos_LMA::E_NOERROR)
+        {
+            // copy IK values into vector target_joint_angs
+            target_joint_angs.resize(chain_.getNrOfJoints());
+
+            for (unsigned int i = 0; i < chain_.getNrOfJoints(); i++)
+            {
+                target_joint_angs[i] = q_target_(i);
+            }
+            move_group_->setJointValueTarget(target_joint_angs);
+            
+            // move the robot using moveJoints() if IK succeeds
+            if (moveJoints())
+            {
+                // compute error metrics if that succeeds
+                computeErrorMetrics();
+            }
+            RCLCPP_INFO(this->get_logger(), "Inverse kinematics successful!");
+        }
+        else
+        {
+            RCLCPP_ERROR(this->get_logger(), "Inverse kinematics failed!");
+        }
+
+    }
 }
 
 bool RobotKinValidation::moveJoints()
