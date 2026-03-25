@@ -100,7 +100,7 @@ void RobotKinValidation::solveIKAndMoveRobot(const Eigen::Vector3d & position)
         );
 
         // Construct the KDL::Frame
-        tracked_frame_ = KDL::Frame desired_ee_frame(kdl_rotation, kdl_position);
+        KDL::Frame desired_ee_frame(kdl_rotation, kdl_position);
 
         // solve the inverse kinematics
         int error = ik_solver_->CartToJnt(q_init, desired_ee_frame, q_target_);
