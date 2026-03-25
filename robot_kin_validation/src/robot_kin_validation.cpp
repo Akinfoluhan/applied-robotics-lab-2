@@ -5,8 +5,7 @@ RobotKinValidation::RobotKinValidation(rclcpp::NodeOptions options)
       circle_center_(0.23, 0.0, 0.22),
       circle_radius_(0.05),
       circle_idx_(0),
-      ee_frame_("meca_axis_6_link"),
-      tracked_frame_("")
+      ee_frame_("meca_axis_6_link")
 {
     // initialize the error arrays to 0
     translational_errors_.fill(0.0);
@@ -101,7 +100,7 @@ void RobotKinValidation::solveIKAndMoveRobot(const Eigen::Vector3d & position)
         );
 
         // Construct the KDL::Frame
-        KDL::Frame desired_ee_frame(kdl_rotation, kdl_position);
+        tracked_frame_ = KDL::Frame desired_ee_frame(kdl_rotation, kdl_position);
 
         // solve the inverse kinematics
         int error = ik_solver_->CartToJnt(q_init, desired_ee_frame, q_target_);
