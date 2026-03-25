@@ -204,27 +204,19 @@ double RobotKinValidation::computeTranslationMetric(Eigen::Vector3d & pos_vec)
 
 void RobotKinValidation::robotDescriptionCallback(const std_msgs::msg::String & msg)
 {
-    if (!kdl_parser::treeFromString(msg.data, tree_))
-    {
-        RCLCPP_ERROR(this->get_logger(), "Couldn't construct KDL tree");
-        return;
-    }
- 
-    // Get kinematic chain — change link names to match your robot's URDF
-    if (!tree_.getChain("LINK0 NAME", "EE LINK ", chain_)) //replace with meca500 link names
-    {
-        RCLCPP_ERROR(this->get_logger(), "Couldn't get kinematic chain");
-        return;
-    }
- 
-    // Size the joint array to match the chain
-    joint_angles_.resize(chain_.getNrOfJoints());
- 
+    // Construct KDL tree from URDF
+    const std::string urdf = msg.data;
+    kdl_parser::treeFromString(urdf, tree_);
+
+    // Get kinematic chain of the robot
+    tree_.getChain("meca_base_link", "meca_axis_6_link", chain_);
+
+    // setup the KDL::JntArray object with the correct number of joints
+    q_init_ = KDL::JntArray(chain_.getNrOfJoints());
+    q_target_ = KDL::JntArray(chain_.getNrOfJoints());
+
     // Create IK solver
     ik_solver_ = std::make_unique<KDL::ChainIkSolverPos_LMA>(chain_);
-    // solver_ready_ = true;
- 
-    RCLCPP_INFO(this->get_logger(), "KDL solver ready (%u joints).", chain_.getNrOfJoints());
 }
 
 double RobotKinValidation::computeAverageOfArray(const std::array<double, 360> & array)
