@@ -39,6 +39,9 @@ void RobotKinValidation::initMoveGroup()
     // set movegroup to target joint angle
     move_group_->setJointValueTarget(target_joint_angs);
 
+    // set movement speed scaling
+    move_group_->setMaxVelocityScalingFactor(0.5);
+
 }
 
 bool RobotKinValidation::mainCircleLoop()
@@ -220,7 +223,7 @@ void RobotKinValidation::robotDescriptionCallback(const std_msgs::msg::String & 
  
     // Create IK solver
     ik_solver_ = std::make_unique<KDL::ChainIkSolverPos_LMA>(chain_);
-    solver_ready_ = true;
+    // solver_ready_ = true;
  
     RCLCPP_INFO(this->get_logger(), "KDL solver ready (%u joints).", chain_.getNrOfJoints());
 }
