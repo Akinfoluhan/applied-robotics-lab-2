@@ -5,9 +5,9 @@ RobotKinValidation::RobotKinValidation(rclcpp::NodeOptions options)
       circle_center_(0.23, 0.0, 0.22),
       circle_radius_(0.05),
       circle_idx_(0),
-      base_frame_("t2u"),
-      ee_frame_("t3u"),
-      tracked_frame_("t5u")
+      base_frame_("PLACEHOLDER"),
+      ee_frame_("PLACEHOLDER"),
+      tracked_frame_("PLACEHOLDER")
 {
     // initialize the error arrays to 0
     translational_errors_.fill(0.0);
