@@ -75,7 +75,8 @@ bool RobotKinValidation::mainCircleLoop()
     target_position.z() = circle_center_.z() + circle_radius_ * std::sin(theta);
 
     solveIKAndMoveRobot(target_position);
-
+    circle_idx_++; 
+    
     // circle not complete yet
     return false;
 }
@@ -227,7 +228,7 @@ void RobotKinValidation::robotDescriptionCallback(const std_msgs::msg::String & 
 double RobotKinValidation::computeAverageOfArray(const std::array<double, 360> & array)
 {
     double sum = 0.0;
-    for (i = 0; i < array.size(); i++){
+    for (size_t i = 0; i < array.size(); i++){
         sum += array[i];
     }
     return sum / 360.0;
