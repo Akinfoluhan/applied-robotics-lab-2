@@ -7,7 +7,7 @@
     "serial-port": "/dev/ttyUSB0",
 
      // path to look for files
-    "definition-path": ["~/workspace/examples_ws/src/lecture10_examples/polaris_example/share/roms"],
+    "definition-path": ["~/workspace/ros2_ws/src/lab_2/polaris_config/share/roms"],
 
     // name of base frame
     "name": "polaris",
