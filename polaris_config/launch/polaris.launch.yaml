@@ -1,24 +1,21 @@
 ## Main launch file for the polaris for lab 2
 
 launch:
-	- node:
+    - node:
 	    pkg: 'ndi_tracker'
-	    exec: 'ndi_tracker'
-	    name: 'ndi_tracker'
-	    output: 'screen'
-	    
+		exec: 'ndi_tracker'
+		name: 'ndi_tracker'
+		output: 'screen'
 	    args: '-j /src/lab_2/lab_2/polaris_config/polaris_config.json -P 0.05'
-
-
- 	- node:
-		pkg: 'tf2_ros'
+	
+	- node:
+	    pkg: 'tf2_ros'
 		exec: 'static_transform_publisher'
 		name: 'base_frame_static_tf'
-		args: '-0.0305 0.0 0.2255 0.7071 0.0 0.7071 0.0'
-
+		args: '-0.0305 0.0 0.2255 0.7071 0.0 0.7071 0.0 base_tracker meca_base_link'
+		
 	- node: 
-		pkg: 'tf2_ros'
+	    pkg: 'tf2_ros'
 		exec: 'static_transform_publisher'
 		name: 'ee_frame_static_tf'
-		args: '-0.02509 0.0 0.0238999 0.7071 0.0 0.0 0.7071'
-
+		args: '-0.02509 0.0 0.0238999 0.7071 0.0 0.0 0.7071 ee_tracker ee_measured_frame'
