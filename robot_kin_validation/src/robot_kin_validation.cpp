@@ -6,7 +6,7 @@ RobotKinValidation::RobotKinValidation(rclcpp::NodeOptions options)
       circle_radius_(0.05),
       circle_idx_(0),
       ee_frame_("meca_axis_6_link"),
-      tracked_frame_("ee_tracker")
+      tracked_frame_("ee_measured_frame")
 {
     // initialize the error arrays to 0
     translational_errors_.fill(0.0);
