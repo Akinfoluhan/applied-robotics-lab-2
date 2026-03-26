@@ -10,13 +10,13 @@ launch:
 	    args: '-j /src/lab_2/lab_2/polaris_config/polaris_config.json -P 0.05'
 
 
- - node:
+ 	- node:
 		pkg: 'tf2_ros'
 		exec: 'static_transform_publisher'
 		name: 'base_frame_static_tf'
 		args: '-0.0305 0.0 0.2255 0.7071 0.0 0.7071 0.0'
 
-- node: 
+	- node: 
 		pkg: 'tf2_ros'
 		exec: 'static_transform_publisher'
 		name: 'ee_frame_static_tf'
