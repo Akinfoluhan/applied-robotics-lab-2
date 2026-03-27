@@ -15,13 +15,13 @@
     // tools to be tracked
     "tools": [
         {
-            "name": "base_tracker",
+            "name": "ee_tracker",
             "definition": "8700338.rom",
             "unique-id": "01-34801401-8700338"
         }
         ,
         {
-            "name": "ee_tracker",
+            "name": "base_tracker",
             "definition": "8700339.rom",
             "unique-id": "01-34801403-8700339"
         }

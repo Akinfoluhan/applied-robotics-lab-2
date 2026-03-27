@@ -6,16 +6,16 @@ launch:
       exec: 'ndi_tracker'
       name: 'ndi_tracker'
       output: 'screen'
-      args: '-j ~/workspace/ros2_ws/src/lab_2/polaris_config/share/polaris_config.json -P 0.05'
+      args: '-j /home/akinfoluhan/workspace/ros2_ws/src/lab_2/polaris_config/share/polaris_config.json -P 0.05'
 
   - node:
       pkg: 'tf2_ros'
       exec: 'static_transform_publisher'
       name: 'base_frame_static_tf'
-      args: '-0.0305 0.0 0.2255 0.0 0.7071 0.0 0.7071 base_tracker meca_base_link'
+      args: '--x -0.0305 --y 0.0 --z 0.2255 --qx 0.0 --qy 0.7071 --qz 0.0 --qw 0.7071 --frame-id base_tracker --child-frame-id world'
 
   - node:
       pkg: 'tf2_ros'
       exec: 'static_transform_publisher'
       name: 'ee_frame_static_tf'
-      args: '-0.02509 0.0 0.0238999 0.0 0.0 0.7071 0.7071 ee_tracker ee_measured_frame'
+      args: '--x -0.02509 --y 0.0 --z 0.0238999 --qx 0.7071 --qy 0.0 --qz 0.0 --qw 0.7071 --frame-id ee_tracker --child-frame-id ee_measured_frame'
